@@ -5,7 +5,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 # ==================== CONFIG (CHANGE HERE ONLY) ====================
-MODEL_PATH ="models/kfs_obb_v1.pt"
+MODEL_PATH ="kfs_obb_v1.pt"
 
 IMG_SIZE = 640
 DEVICE = "cpu"  # 0 = GPU, "cpu" if needed
@@ -110,4 +110,5 @@ if uploaded_file is not None:
 
     # -------------------- DISPLAY --------------------
     st.image(annotated, caption="Prediction Result", width=700)
+
 
