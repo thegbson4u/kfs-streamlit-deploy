@@ -24,7 +24,7 @@ LABEL_TEXT_COLOR = (0, 0, 0)       # BLACK text
 LABEL_PADDING = 10
 # ==================================================================
 
-st.set_page_config(page_title="KFS Detection (OBB)", layout="centered")
+st.set_page_config(page_title="KFS Detectionknfdjogjugoj mjfcrhfgdgft (OBB)", layout="centered")
 st.title("🔍 KFS Detection System (OBB)")
 st.write("High-accuracy **Real vs Fake KFS** detection using YOLOv8-OBB")
 
@@ -110,5 +110,6 @@ if uploaded_file is not None:
 
     # -------------------- DISPLAY --------------------
     st.image(annotated, caption="Prediction Result", width=700)
+
 
 
