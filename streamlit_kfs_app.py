@@ -12,11 +12,11 @@ DEVICE = "cpu"  # 0 = GPU, "cpu" if needed
 
 # Bounding box style
 BOX_COLOR = (0, 255, 0)     # Green (BGR)
-BOX_THICKNESS = 2
+BOX_THICKNESS = 1
 
 # Label style (HIGH VISIBILITY)
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-FONT_SCALE = 0.8           # 🔴 BIG TEXT (increase if needed)
+FONT_SCALE = 0.2          # 🔴 BIG TEXT (increase if needed)
 FONT_THICKNESS = 2
 
 LABEL_BG_COLOR = (255, 255, 255)   # WHITE background
