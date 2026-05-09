@@ -45,74 +45,73 @@ html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* Main Background */
+/* Main App */
 .stApp {
-    background-color: #F5F7FA;
-    color: #111827;
+    background-color: #0D1117;
+    color: #E6EDF3;
 }
 
 /* Sidebar */
 section[data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    border-right: 1px solid #E5E7EB;
+    background-color: #11161D;
+    border-right: 1px solid #30363D;
 }
 
-/* Main Header */
+/* Header */
 .main-title {
     font-size: 68px;
     font-weight: 900;
-    color: #111827;
+    color: white;
     margin-bottom: 8px;
     letter-spacing: -1px;
 }
 
 .sub-title {
     font-size: 26px;
-    color: #6B7280;
+    color: #9BA3AF;
     margin-bottom: 40px;
     font-weight: 400;
 }
 
 /* Bento Cards */
 .bento-card {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 20px;
+    background: #161B22;
+    border: 1px solid #30363D;
+    border-radius: 18px;
     padding: 24px;
     margin-bottom: 20px;
     transition: 0.2s ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 25px rgba(0,0,0,0.25);
 }
 
 .bento-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.10);
 }
 
 /* Results */
 .real-result {
-    color: #16A34A;
+    color: #22C55E;
     font-size: 34px;
     font-weight: 800;
 }
 
 .fake-result {
-    color: #DC2626;
+    color: #EF4444;
     font-size: 34px;
     font-weight: 800;
 }
 
 /* Upload Box */
 [data-testid="stFileUploader"] {
-    border: 2px dashed #2563EB;
+    border: 2px dashed #007BFF;
     border-radius: 18px;
     padding: 18px;
-    background: #FFFFFF;
+    background: #161B22;
 }
 
 /* Buttons */
 .stButton > button {
-    background-color: #2563EB;
+    background-color: #007BFF;
     color: white;
     border-radius: 12px;
     border: none;
@@ -122,40 +121,16 @@ section[data-testid="stSidebar"] {
 }
 
 .stButton > button:hover {
-    background-color: #1D4ED8;
+    background-color: #0066D6;
     transform: translateY(-1px);
 }
 
 /* Metrics */
 [data-testid="metric-container"] {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
+    background: #161B22;
+    border: 1px solid #30363D;
     padding: 18px;
     border-radius: 16px;
-}
-
-/* Progress Bar */
-.stProgress > div > div > div > div {
-    background-color: #2563EB;
-}
-
-/* JSON / Logs */
-[data-testid="stJson"] {
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB;
-    padding: 10px;
-}
-
-/* Expanders */
-.streamlit-expanderHeader {
-    color: #111827;
-    font-weight: 600;
-}
-
-/* Text */
-p, label, span, div {
-    color: #111827;
 }
 
 </style>
