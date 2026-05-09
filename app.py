@@ -352,7 +352,7 @@ if uploaded_file is not None:
             st.session_state["detected_conf"] = float(detected_conf)
             st.session_state["inference_time"] = inference_time
 
-            st.switch_page("Full_Analysis.py")
+            st.switch_page("pages/Full_Analysis.py")
 
         st.markdown(
             '</div>',
