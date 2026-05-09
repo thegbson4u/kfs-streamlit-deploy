@@ -59,16 +59,18 @@ section[data-testid="stSidebar"] {
 
 /* Header */
 .main-title {
-    font-size: 46px;
-    font-weight: 800;
+    font-size: 68px;
+    font-weight: 900;
     color: white;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
 }
 
 .sub-title {
-    font-size: 38px;
+    font-size: 26px;
     color: #9BA3AF;
-    margin-bottom: 35px;
+    margin-bottom: 40px;
+    font-weight: 400;
 }
 
 /* Bento Cards */
@@ -338,10 +340,19 @@ if uploaded_file is not None:
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        show_analysis = st.button(
+        # ==================== REDIRECT BUTTON ====================
+
+        if st.button(
             "🔍 Open Full Analysis",
             use_container_width=True
-        )
+        ):
+
+            st.session_state["analysis_image"] = annotated
+            st.session_state["detected_label"] = detected_label
+            st.session_state["detected_conf"] = float(detected_conf)
+            st.session_state["inference_time"] = inference_time
+
+            st.switch_page("pages/Full_Analysis.py")
 
         st.markdown(
             '</div>',
@@ -431,30 +442,6 @@ if uploaded_file is not None:
         }
 
         st.json(detection_logs)
-
-        st.markdown(
-            '</div>',
-            unsafe_allow_html=True
-        )
-
-    # ==================== FULL ANALYSIS ====================
-
-    if show_analysis:
-
-        st.markdown("---")
-
-        st.markdown(
-            '<div class="bento-card">',
-            unsafe_allow_html=True
-        )
-
-        st.markdown("## 🖼 Full Detection Analysis")
-
-        st.image(
-            annotated,
-            caption="YOLOv8 OBB Full Prediction Output",
-            use_container_width=True
-        )
 
         st.markdown(
             '</div>',
