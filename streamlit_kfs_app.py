@@ -1,8 +1,17 @@
 import streamlit as st
 import cv2
 import numpy as np
+import time
 from ultralytics import YOLO
 from PIL import Image
+
+# ==================== PAGE CONFIG ====================
+
+st.set_page_config(
+    page_title="KFS Detection Dashboard",
+    page_icon="🔍",
+    layout="wide"
+)
 
 # ==================== CONFIG ====================
 
@@ -24,49 +33,60 @@ LABEL_BG_COLOR = (255, 255, 255)
 LABEL_TEXT_COLOR = (0, 0, 0)
 LABEL_PADDING = 6
 
-# =================================================
-
-st.set_page_config(
-    page_title="KFS Detection System",
-    layout="wide"
-)
-
-# ================= CUSTOM CSS ====================
+# ==================== CUSTOM CSS ====================
 
 st.markdown("""
 <style>
 
-.main {
-    background-color: #0E1117;
-    color: white;
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Main Background */
+.stApp {
+    background-color: #0D1117;
+    color: #E6EDF3;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #11161D;
+    border-right: 1px solid #30363D;
 }
 
 /* Header */
-.title-text {
-    font-size: 42px;
+.main-title {
+    font-size: 46px;
     font-weight: 800;
     color: white;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
 }
 
-.subtitle-text {
-    color: #9BA3AF;
+.sub-title {
     font-size: 18px;
-    margin-top: -10px;
-    margin-bottom: 30px;
+    color: #9BA3AF;
+    margin-bottom: 35px;
 }
 
 /* Bento Cards */
 .bento-card {
     background: #161B22;
+    border: 1px solid #30363D;
+    border-radius: 18px;
     padding: 24px;
-    border-radius: 24px;
-    border: 1px solid #2A2F3A;
     margin-bottom: 20px;
-    box-shadow: 0px 4px 20px rgba(0,0,0,0.25);
+    transition: 0.2s ease;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.25);
 }
 
-/* Result Text */
+.bento-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Results */
 .real-result {
     color: #22C55E;
     font-size: 34px;
@@ -79,33 +99,59 @@ st.markdown("""
     font-weight: 800;
 }
 
-.metric-label {
-    color: #9BA3AF;
-    font-size: 14px;
+/* Upload Area */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #007BFF;
+    border-radius: 18px;
+    padding: 18px;
+    background: #161B22;
 }
 
-.metric-value {
-    font-size: 28px;
-    font-weight: bold;
+/* Buttons */
+.stButton > button {
+    background-color: #007BFF;
     color: white;
+    border-radius: 12px;
+    border: none;
+    padding: 12px 18px;
+    font-weight: 600;
+}
+
+.stButton > button:hover {
+    background-color: #0066D6;
+    transform: translateY(-1px);
+}
+
+/* Metrics */
+[data-testid="metric-container"] {
+    background: #161B22;
+    border: 1px solid #30363D;
+    padding: 18px;
+    border-radius: 16px;
+}
+
+/* Expander */
+.streamlit-expanderHeader {
+    font-size: 16px;
+    font-weight: 600;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ================= HEADER ====================
+# ==================== HEADER ====================
 
 st.markdown(
-    '<p class="title-text">🔍 KFS Detection System</p>',
+    '<p class="main-title">🔍 KFS Detection Dashboard</p>',
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<p class="subtitle-text">High-accuracy Real vs Fake KFS detection using YOLOv8-OBB</p>',
+    '<p class="sub-title">Real vs Fake KFS Detection using YOLOv8-OBB</p>',
     unsafe_allow_html=True
 )
 
-# ================= LOAD MODEL ====================
+# ==================== LOAD MODEL ====================
 
 @st.cache_resource
 def load_model():
@@ -113,36 +159,60 @@ def load_model():
 
 model = load_model()
 
-# ================= LABELS ====================
+# ==================== SIDEBAR ====================
 
-st.markdown("### 📌 Model Labels")
+with st.sidebar:
 
-for idx, name in model.names.items():
-    st.write(f"Class {idx}: {name}")
+    st.markdown("# ⚙ Dashboard Settings")
 
-# ================= SETTINGS ====================
+    with st.expander("📌 Model Labels", expanded=False):
 
-conf = st.slider(
-    "Confidence Threshold",
-    0.1,
-    0.9,
-    0.3,
-    0.05
-)
+        for idx, name in model.names.items():
+            st.write(f"Class {idx}: {name}")
+
+    with st.expander("🎚 Detection Settings", expanded=True):
+
+        conf = st.slider(
+            "Confidence Threshold",
+            0.1,
+            0.9,
+            0.3,
+            0.05
+        )
+
+    with st.expander("🧠 Model Metadata", expanded=False):
+
+        st.markdown("""
+        **Architecture:** YOLOv8 OBB  
+        **Input Size:** 640  
+        **Device:** CPU  
+        **Framework:** Ultralytics  
+        **Classes:** 2  
+        """)
+
+    st.markdown("---")
+
+    st.caption(
+        "Built with YOLOv8-OBB, Streamlit, OpenCV and custom dataset training."
+    )
+
+# ==================== FILE UPLOADER ====================
 
 uploaded_file = st.file_uploader(
-    "Upload an image",
+    "📂 Drag & Drop Image Here",
     type=["jpg", "jpeg", "png"]
 )
 
-# ================= PROCESS IMAGE ====================
+# ==================== MAIN PROCESS ====================
 
 if uploaded_file is not None:
 
     image = Image.open(uploaded_file).convert("RGB")
     image_np = np.array(image)
 
-    # ================= INFERENCE ====================
+    # ==================== INFERENCE ====================
+
+    start_time = time.time()
 
     results = model.predict(
         source=image_np,
@@ -152,6 +222,8 @@ if uploaded_file is not None:
         verbose=False
     )
 
+    inference_time = (time.time() - start_time) * 1000
+
     annotated = image_np.copy()
 
     h, w, _ = annotated.shape
@@ -159,7 +231,7 @@ if uploaded_file is not None:
     detected_label = "No Detection"
     detected_conf = 0.0
 
-    # ================= DRAW DETECTIONS ====================
+    # ==================== DRAW DETECTIONS ====================
 
     for r in results:
 
@@ -174,7 +246,7 @@ if uploaded_file is not None:
 
             pts = box.reshape(-1, 2).astype(int)
 
-            # Draw OBB
+            # Draw Rotated Bounding Box
             cv2.polylines(
                 annotated,
                 [pts],
@@ -183,13 +255,12 @@ if uploaded_file is not None:
                 thickness=BOX_THICKNESS
             )
 
-            # Label
             label = model.names[int(cls)]
 
             detected_label = label
             detected_conf = score
 
-            text = f"{label.upper()}  {score:.2f}"
+            text = f"{label.upper()} {score:.2f}"
 
             (text_w, text_h), _ = cv2.getTextSize(
                 text,
@@ -219,7 +290,7 @@ if uploaded_file is not None:
                 -1
             )
 
-            # Text
+            # Black Text
             cv2.putText(
                 annotated,
                 text,
@@ -231,11 +302,11 @@ if uploaded_file is not None:
                 cv2.LINE_AA
             )
 
-    # ================= BENTO GRID ====================
+    # ==================== DASHBOARD GRID ====================
 
     col1, col2 = st.columns([1, 1])
 
-    # ================= RESULT CARD ====================
+    # ==================== RESULT CARD ====================
 
     with col1:
 
@@ -268,12 +339,14 @@ if uploaded_file is not None:
             value=f"{detected_conf:.2f}"
         )
 
+        st.progress(float(detected_conf))
+
         st.markdown(
             '</div>',
             unsafe_allow_html=True
         )
 
-    # ================= PREVIEW CARD ====================
+    # ==================== PREVIEW CARD ====================
 
     with col2:
 
@@ -300,13 +373,91 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
-    # ================= FULL IMAGE ====================
+    # ==================== METADATA GRID ====================
 
-    st.markdown("## 🖼 Full Detection Analysis")
+    col3, col4 = st.columns([1, 1])
 
-    st.image(
-        annotated,
-        caption="YOLOv8 OBB Prediction Output",
-        use_container_width=True
-    )
+    # ==================== PERFORMANCE CARD ====================
+
+    with col3:
+
+        st.markdown(
+            '<div class="bento-card">',
+            unsafe_allow_html=True
+        )
+
+        st.markdown("## ⚡ Performance Metrics")
+
+        st.metric(
+            "Inference Time",
+            f"{inference_time:.2f} ms"
+        )
+
+        st.metric(
+            "Model",
+            "YOLOv8 OBB"
+        )
+
+        st.metric(
+            "Device",
+            DEVICE.upper()
+        )
+
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+    # ==================== SYSTEM LOGS ====================
+
+    with col4:
+
+        st.markdown(
+            '<div class="bento-card">',
+            unsafe_allow_html=True
+        )
+
+        st.markdown("## 📜 System Logs")
+
+        detection_logs = {
+            "detected_label": detected_label,
+            "confidence": float(detected_conf),
+            "inference_time_ms": round(inference_time, 2),
+            "device": DEVICE,
+            "image_size": IMG_SIZE,
+            "model": "YOLOv8 OBB"
+        }
+
+        st.json(detection_logs)
+
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+    # ==================== OPTIONAL FULL ANALYSIS ====================
+
+    st.markdown("---")
+
+    show_analysis = st.button("🔍 Open Full Analysis")
+
+    if show_analysis:
+
+        st.markdown(
+            '<div class="bento-card">',
+            unsafe_allow_html=True
+        )
+
+        st.markdown("## 🖼 Full Detection Analysis")
+
+        st.image(
+            annotated,
+            caption="YOLOv8 OBB Full Prediction Output",
+            use_container_width=True
+        )
+
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True
+        )
 
