@@ -66,7 +66,7 @@ section[data-testid="stSidebar"] {
 }
 
 .sub-title {
-    font-size: 18px;
+    font-size: 38px;
     color: #9BA3AF;
     margin-bottom: 35px;
 }
