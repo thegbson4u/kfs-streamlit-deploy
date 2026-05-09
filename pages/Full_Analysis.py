@@ -33,33 +33,44 @@ inference_time = st.session_state["inference_time"]
 
 # ================= MAIN IMAGE =================
 
-st.image(
-    annotated,
-    caption="YOLOv8 OBB Full Prediction Output",
-    use_container_width=True
+# ================= MAIN IMAGE =================
+
+st.markdown("""
+<style>
+
+.bento-card {
+    background: #161B22;
+    border: 1px solid #30363D;
+    border-radius: 18px;
+    padding: 24px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="bento-card">',
+    unsafe_allow_html=True
 )
 
-# ================= METRICS =================
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric(
-        "Detected Label",
-        detected_label.upper()
-    )
+# Centered Layout
+col1, col2, col3 = st.columns([1, 3, 1])
 
 with col2:
-    st.metric(
-        "Confidence",
-        f"{detected_conf:.2f}"
+
+    st.image(
+        annotated,
+        caption="YOLOv8 OBB Full Prediction Output",
+        width=850
     )
 
-with col3:
-    st.metric(
-        "Inference Time",
-        f"{inference_time:.2f} ms"
-    )
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
+)
 
 # ================= LOGS =================
 
