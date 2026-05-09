@@ -33,6 +33,9 @@ def load_model():
     return YOLO(MODEL_PATH)
 
 model = load_model()
+st.subheader("📌 Model Labels")
+
+st.write(model.names)
 
 conf = st.slider("Confidence Threshold", 0.1, 0.9, 0.3, 0.05)
 
