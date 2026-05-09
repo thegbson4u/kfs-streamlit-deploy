@@ -16,7 +16,7 @@ BOX_THICKNESS = 1
 
 # Label style (HIGH VISIBILITY)
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-FONT_SCALE = 0.2          # 🔴 BIG TEXT (increase if needed)
+FONT_SCALE = 0.4          # 🔴 BIG TEXT (increase if needed)
 FONT_THICKNESS = 2
 
 LABEL_BG_COLOR = (255, 255, 255)   # WHITE background
