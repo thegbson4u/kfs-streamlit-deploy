@@ -38,14 +38,14 @@ LABEL_PADDING = 6
 st.markdown("""
 <style>
 
-/* Import Font */
+/* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* Main Background */
+/* Main App */
 .stApp {
     background-color: #0D1117;
     color: #E6EDF3;
@@ -99,7 +99,7 @@ section[data-testid="stSidebar"] {
     font-weight: 800;
 }
 
-/* Upload Area */
+/* Upload Box */
 [data-testid="stFileUploader"] {
     border: 2px dashed #007BFF;
     border-radius: 18px;
@@ -115,6 +115,7 @@ section[data-testid="stSidebar"] {
     border: none;
     padding: 12px 18px;
     font-weight: 600;
+    width: 100%;
 }
 
 .stButton > button:hover {
@@ -128,12 +129,6 @@ section[data-testid="stSidebar"] {
     border: 1px solid #30363D;
     padding: 18px;
     border-radius: 16px;
-}
-
-/* Expander */
-.streamlit-expanderHeader {
-    font-size: 16px;
-    font-weight: 600;
 }
 
 </style>
@@ -246,7 +241,7 @@ if uploaded_file is not None:
 
             pts = box.reshape(-1, 2).astype(int)
 
-            # Draw Rotated Bounding Box
+            # Draw Bounding Box
             cv2.polylines(
                 annotated,
                 [pts],
@@ -281,7 +276,7 @@ if uploaded_file is not None:
                 y0
             )
 
-            # White Background
+            # White Rectangle
             cv2.rectangle(
                 annotated,
                 (x0, y0 - text_h - LABEL_PADDING * 2),
@@ -290,7 +285,7 @@ if uploaded_file is not None:
                 -1
             )
 
-            # Black Text
+            # Text
             cv2.putText(
                 annotated,
                 text,
@@ -341,6 +336,13 @@ if uploaded_file is not None:
 
         st.progress(float(detected_conf))
 
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        show_analysis = st.button(
+            "🔍 Open Full Analysis",
+            use_container_width=True
+        )
+
         st.markdown(
             '</div>',
             unsafe_allow_html=True
@@ -377,7 +379,7 @@ if uploaded_file is not None:
 
     col3, col4 = st.columns([1, 1])
 
-    # ==================== PERFORMANCE CARD ====================
+    # ==================== PERFORMANCE ====================
 
     with col3:
 
@@ -435,13 +437,11 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
-    # ==================== OPTIONAL FULL ANALYSIS ====================
-
-    st.markdown("---")
-
-    show_analysis = st.button("🔍 Open Full Analysis")
+    # ==================== FULL ANALYSIS ====================
 
     if show_analysis:
+
+        st.markdown("---")
 
         st.markdown(
             '<div class="bento-card">',
