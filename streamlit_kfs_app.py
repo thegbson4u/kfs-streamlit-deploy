@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import cv2
 import numpy as np
@@ -310,4 +309,4 @@ if uploaded_file is not None:
         caption="YOLOv8 OBB Prediction Output",
         use_container_width=True
     )
-```
+
